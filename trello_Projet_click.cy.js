@@ -1,21 +1,56 @@
 
 describe("projet trello", () => {
-    it("Login", () => {
-      cy.visit("https://trello.com");
-      cy.contains("Log in").click();
-  
-      // LOGIN
-      cy.origin("https://id.atlassian.com", () => {
-        cy.get("#username").type("ryantheap@gmail.com");
-        cy.get("#login-submit").click();
-        cy.get("#password").type("Wcstrello.33");
-        cy.get("#login-submit").click();
+  it("Login", () => {
+    cy.visit("https://trello.com");
+    cy.contains("Log in").click();
+
+    // LOGIN
+    cy.origin("https://id.atlassian.com", () => {
+      cy.get("#username").type("ryantheap@gmail.com");
+      cy.get("#login-submit").click();
+      cy.get("#password").type("Wcstrello.33");
+      cy.get("#login-submit").click();
+    });
+
+    cy.get('[href="/b/Ym8HTYlp/wcs-projet-trello"]').click();
+    cy.wait(3000);
+    cy.fixture("cardData").then((cardData) => {
+      /* Ajouter les cartes */
+      cardData.forEach((card) => {
+        cy.contains("Ajouter une carte").click();
+        cy.get('[data-testid="list-card-composer-textarea"]').type(card.title);
       });
-  
-        cy.get('[href="/b/Ym8HTYlp/wcs-projet-trello"]').click();
+
+      // Ajouter la description pour chaque carte
+      cardData.forEach((card) => {
+        cy.contains(card.title).click();
         cy.wait(3000);
-        cy.get(':nth-child(1) > [data-testid="trello-card"] > .amUfYqLTZOvGsn > [data-testid="card-name"]').drag('[data-list-id="6657215ecc4df39e336a013d"] > [data-testid="list"] > [data-testid="list-footer"] > [data-testid="list-add-card-button"]')
-      })  
+
+        cy.get(
+          '[aria-label="Zone de contenu principale, commencez à taper pour saisir du texte."]'
+        )
+          .click({ force: true })
+          .type(card.description);
+        cy.get('[data-testid="editor-save-button"]').click();
+        cy.get('[aria-label="Fermer la boîte de dialogue"]').click();
       });
-   
+
+      // Déplacer les cartes
+      cardData.forEach((card) => {
+        cy.contains(card.title).drag(".Sb_QqNKeadm2oq");
+        cy.contains(card.title).click();
+        cy.wait(3000);
+        cy.contains("Déplacer").click();
+        cy.get('[data-testid="move-card-popover-select-list-destination"]')
+          .click()
+          .type(card.migrate)
+          .trigger("keydown", {
+            key: "Enter",
+          });
+        cy.get('[data-testid="move-card-popover-move-button"]').click();
+        cy.get('[aria-label="Fermer la boîte de dialogue"]').click();
+      });
+    });
+  });
+});
     
