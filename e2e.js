@@ -12,7 +12,16 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
-
+const {defineConFig } = require("cypress")
+module exports = defineConFig({
+  e2e: {
+    baseUrl = "https://trello.com"
+    setupNodeEvents(on,config){
+  },
+    
+  },
+  
+},
 // Import commands.js using ES2015 syntax:
 import './commands'
 import "cypress-mailslurp";
