@@ -10,10 +10,12 @@
     "delete:reports": "node cypress/support/node_fs/removeDir.js",
     "cy:chrome": "npx cypress run --spec './cypress/e2e/3-exemples/*' --browser=chrome",
     "pretest": "npm-run-all --sequential delete:reports create:reportFolder",
-    "test": "npm-run-all --sequential pretest cy:chrome combine-reports generate-report --continue-on-error",
     "cy:run": "rimraf mochawesome-report cypress/results mochawesome.json && cypress run",
     "generateReport": "npx mochawesome-merge 'cypress/results/*.json' > mochawesome.json && npx marge mochawesome.json",
-    "cy:run:report": "npm run cy:run && npm run generateReport"
+    "cy:run:report": "npm run cy:run && npm run generateReport",
+    "start": "your-start-script",
+    "test": "cypress open",
+    "cypress:run": "cypress run"
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.5",
